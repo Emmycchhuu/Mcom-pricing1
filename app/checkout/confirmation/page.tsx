@@ -1,12 +1,14 @@
-"use client"
+'use client'
 
-import { useSearchParams } from "next/navigation"
-import Link from "next/link"
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { Suspense } from 'react'
 
-export default function ConfirmationPage() {
+// Inner component (actually uses the hook)
+function ConfirmationContent() {
   const params = useSearchParams()
-  const plan = params.get("plan") || "Bronze"
-  const billing = params.get("billing") || "monthly"
+  const plan = params.get('plan') || 'Bronze'
+  const billing = params.get('billing') || 'monthly'
 
   return (
     <main className="min-h-screen px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto py-16">
@@ -30,16 +32,32 @@ export default function ConfirmationPage() {
         </div>
         <div className="rounded-2xl border-2 border-border p-5 bg-card">
           <h2 className="font-semibold mb-2">Support</h2>
-          <p className="text-foreground/80">Need help? Contact your support person at <a className="underline" href="mailto:support@example.com">support@example.com</a>.</p>
+          <p className="text-foreground/80">
+            Need help? Contact your support person at{' '}
+            <a className="underline" href="mailto:support@example.com">
+              support@example.com
+            </a>.
+          </p>
         </div>
       </div>
 
       <div className="mt-10 flex items-center justify-between">
-        <Link href="/" className="underline">Back to Pricing</Link>
-        <Link href="/" className="px-6 py-3 rounded-full bg-primary text-primary-foreground">Go to Dashboard</Link>
+        <Link href="/" className="underline">
+          Back to Pricing
+        </Link>
+        <Link href="/" className="px-6 py-3 rounded-full bg-primary text-primary-foreground">
+          Go to Dashboard
+        </Link>
       </div>
     </main>
   )
 }
 
-
+// Outer wrapper (Suspense boundary)
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center">Loading confirmation...</div>}>
+      <ConfirmationContent />
+    </Suspense>
+  )
+}
