@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 import { useInView } from '@/hooks/use-in-view'
 
 interface RevealProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: keyof JSX.IntrinsicElements
+  as?: React.ElementType
   animationClass?: string
   delayMs?: number
   once?: boolean
@@ -21,6 +21,7 @@ export function Reveal({
 }: RevealProps) {
   const { ref, inView } = useInView<HTMLDivElement>()
   const Comp: any = as
+
   return (
     <Comp
       ref={ref}
@@ -32,5 +33,3 @@ export function Reveal({
     </Comp>
   )
 }
-
-
