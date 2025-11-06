@@ -1,12 +1,11 @@
-"use client"
+'use client'
 
-import { useMemo, useState, useEffect } from "react"
+import { Suspense, useMemo, useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { Award, Medal, Trophy, Crown, Target, BadgePercent, type LucideIcon } from "lucide-react"
 import { applyCoupon, findCoupon, getPrice, getTierByName, type BillingCycle } from "@/lib/content"
 
-// Icon mapping to visually reinforce the selected tier.
 const iconByTier: Record<string, LucideIcon> = {
   Trial: Target,
   Bronze: Award,
@@ -15,7 +14,7 @@ const iconByTier: Record<string, LucideIcon> = {
   Platinum: Crown,
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const params = useSearchParams()
   const router = useRouter()
   const initialPlan = params.get("plan") || "Bronze"
@@ -36,7 +35,6 @@ export default function CheckoutPage() {
   const { final, discount } = useMemo(() => applyCoupon(basePrice, appliedCoupon), [basePrice, appliedCoupon])
 
   useEffect(() => {
-    // Keep URL in sync for shareable checkout state.
     const qs = new URLSearchParams()
     qs.set("plan", plan)
     qs.set("billing", billing)
@@ -157,4 +155,10 @@ export default function CheckoutPage() {
   )
 }
 
-
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center">Loading checkout...</div>}>
+      <CheckoutContent />
+    </Suspense>
+  )
+}
